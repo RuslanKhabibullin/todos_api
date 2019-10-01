@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/khabibullin_ruslan/todos_api/branches/master/badge.svg)](https://semaphoreci.com/khabibullin_ruslan/todos_api)
+
 # TodosApi
 ## Description
 Elixir backend for todos app. Currently implemented user stories:
