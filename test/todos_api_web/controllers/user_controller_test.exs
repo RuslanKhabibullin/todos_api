@@ -6,13 +6,13 @@ defmodule TodosApiWeb.UserControllerTest do
 
   @create_attrs %{
     email: "some email",
-    password_hash: "some password_hash"
+    password: "some password_hash"
   }
   @update_attrs %{
     email: "some updated email",
-    password_hash: "some updated password_hash"
+    password: "some updated password_hash"
   }
-  @invalid_attrs %{email: nil, password_hash: nil}
+  @invalid_attrs %{email: nil, password: nil}
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
@@ -33,15 +33,14 @@ defmodule TodosApiWeb.UserControllerTest do
   describe "create user" do
     test "renders user when data is valid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      creation_response_data = json_response(conn, 201)["data"]
+
+      assert %{"id" => id} = creation_response_data["user"]
+      assert is_bitstring(creation_response_data["token"]) == true
 
       conn = get(conn, Routes.user_path(conn, :show, id))
 
-      assert %{
-               "id" => id,
-               "email" => "some email",
-               "password_hash" => "some password_hash"
-             } = json_response(conn, 200)["data"]
+      assert %{"id" => id, "email" => "some email"} == json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -61,8 +60,7 @@ defmodule TodosApiWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "email" => "some updated email",
-               "password_hash" => "some updated password_hash"
+               "email" => "some updated email"
              } = json_response(conn, 200)["data"]
     end
 
