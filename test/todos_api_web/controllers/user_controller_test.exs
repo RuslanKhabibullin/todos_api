@@ -5,12 +5,12 @@ defmodule TodosApiWeb.UserControllerTest do
   alias TodosApi.Accounts.User
 
   @create_attrs %{
-    email: "some email",
-    password: "some password_hash"
+    email: "user@email.com",
+    password: "password"
   }
   @update_attrs %{
-    email: "some updated email",
-    password: "some updated password_hash"
+    email: "updated_user@email.com",
+    password: "updated_password"
   }
   @invalid_attrs %{email: nil, password: nil}
 
@@ -40,7 +40,7 @@ defmodule TodosApiWeb.UserControllerTest do
 
       conn = get(conn, Routes.user_path(conn, :show, id))
 
-      assert %{"id" => id, "email" => "some email"} == json_response(conn, 200)["data"]
+      assert %{"id" => id, "email" => "user@email.com"} == json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -60,7 +60,7 @@ defmodule TodosApiWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "email" => "some updated email"
+               "email" => "updated_user@email.com"
              } = json_response(conn, 200)["data"]
     end
 

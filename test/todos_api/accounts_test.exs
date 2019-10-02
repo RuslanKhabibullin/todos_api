@@ -6,8 +6,8 @@ defmodule TodosApi.AccountsTest do
   describe "users" do
     alias TodosApi.Accounts.User
 
-    @valid_attrs %{email: "some email", password: "some password_hash"}
-    @update_attrs %{email: "some updated email", password: "some updated password_hash"}
+    @valid_attrs %{email: "user@email.com", password: "password"}
+    @update_attrs %{email: "updated_user@email.com", password: "updated_password"}
     @invalid_attrs %{email: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -31,7 +31,7 @@ defmodule TodosApi.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.email == "some email"
+      assert user.email == "user@email.com"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -41,7 +41,7 @@ defmodule TodosApi.AccountsTest do
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.email == "some updated email"
+      assert user.email == "updated_user@email.com"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
@@ -59,6 +59,11 @@ defmodule TodosApi.AccountsTest do
     test "change_user/1 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user(user)
+    end
+
+    test "get_user_by_email_and_password/2 get user by email and password" do
+      user = user_fixture()
+      assert {:ok, user} == Accounts.get_user_by_email_and_password("user@email.com", "password")
     end
   end
 end
