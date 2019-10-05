@@ -2,10 +2,13 @@ defmodule TodosApi.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias TodosApi.Accounts.Oauth
+
   schema "users" do
     field :email, :string
     field :password_hash, :string
     field :password, :string, virtual: true
+    has_many :oauths, Oauth
 
     timestamps()
   end
@@ -17,6 +20,21 @@ defmodule TodosApi.Accounts.User do
     |> validate_required([:email, :password])
     |> unique_constraint(:email)
     |> put_hash_password()
+  end
+
+  @doc """
+  Generates random password with given length (default - 8)
+
+  ## Examples
+
+      iex> generate_password()
+      "RandPass"
+
+  """
+  def generate_password(length \\ 8) do
+    :crypto.strong_rand_bytes(length)
+    |> Base.encode64
+    |> binary_part(0, length)
   end
 
   defp put_hash_password(%{valid?: true, changes: %{password: password}} = changeset) do

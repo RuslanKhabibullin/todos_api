@@ -7,6 +7,7 @@ defmodule TodosApi.Accounts do
   alias TodosApi.Repo
 
   alias TodosApi.Accounts.User
+  alias TodosApi.Accounts.Oauth
 
   @doc """
   Returns the list of users.
@@ -144,5 +145,141 @@ defmodule TodosApi.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  @doc """
+  Create user entity with associated oauth from given map with email, provider and uid
+
+  ## Examples
+
+      iex> create_user_with_oauth(%{email: value, provider: provider, uid: uid})
+      {:ok, %{user: %User{}, oauth: %Oauth{}}}
+
+  """
+  def create_user_with_oauth(%{email: email, provider: provider, uid: uid}) do
+    user_changeset = User.changeset(%User{}, %{email: email, password: User.generate_password()})
+    oauth_changeset = Oauth.changeset(%Oauth{}, %{provider: provider, uid: uid})
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user, user_changeset)
+    |> Ecto.Multi.run(:oauth, fn(repo, %{user: user}) ->
+      oauth_changeset
+      |> Ecto.Changeset.put_change(:user_id, user.id)
+      |> repo.insert()
+    end)
+    |> Repo.transaction()
+  end
+
+  @doc """
+  Returns the list of oauths.
+
+  ## Examples
+
+      iex> list_oauths()
+      [%Oauth{}, ...]
+
+  """
+  def list_oauths do
+    Repo.all(Oauth)
+  end
+
+  @doc """
+  Gets a single oauth.
+
+  Raises `Ecto.NoResultsError` if the Oauth does not exist.
+
+  ## Examples
+
+      iex> get_oauth!(123)
+      %Oauth{}
+
+      iex> get_oauth!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_oauth!(id), do: Repo.get!(Oauth, id)
+
+  @doc """
+  Gets a user by oauth provider and uid
+
+  ### Examples
+
+        iex> get_user_by_provider_and_uid("provider", "uid")
+        %User{}
+
+  """
+  def get_user_by_provider_and_uid(provider, uid) do
+    case Repo.get_by(Oauth, provider: provider, uid: uid) do
+      nil -> nil
+      oauth ->
+        oauth = Repo.preload(oauth, :user) 
+        oauth.user
+    end
+  end
+
+  @doc """
+  Creates a oauth for given user.
+
+  ## Examples
+
+      iex> create_oauth(%User{id: 1}, %{field: value})
+      {:ok, %Oauth{}}
+
+      iex> create_oauth(%User{id: 1}, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_oauth(%User{} = user, attrs \\ %{}) do
+    %Oauth{}
+    |> Oauth.changeset(attrs)
+    |> Ecto.Changeset.put_change(:user_id, user.id)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a oauth.
+
+  ## Examples
+
+      iex> update_oauth(oauth, %{field: new_value})
+      {:ok, %Oauth{}}
+
+      iex> update_oauth(oauth, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_oauth(%Oauth{} = oauth, attrs) do
+    oauth
+    |> Oauth.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Oauth.
+
+  ## Examples
+
+      iex> delete_oauth(oauth)
+      {:ok, %Oauth{}}
+
+      iex> delete_oauth(oauth)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_oauth(%Oauth{} = oauth) do
+    Repo.delete(oauth)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking oauth changes.
+
+  ## Examples
+
+      iex> change_oauth(oauth)
+      %Ecto.Changeset{source: %Oauth{}}
+
+  """
+  def change_oauth(%Oauth{} = oauth) do
+    Oauth.changeset(oauth, %{})
   end
 end
