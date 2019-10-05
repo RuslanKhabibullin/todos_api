@@ -17,8 +17,13 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
-config :todos_api, TodosApi.Guardian,
+config :todos_api, TodosApiWeb.Authentication.Guardian,
   issuer: "TodosApi",
   secret_key: System.get_env("SECRET_KEY_BASE")
+
+# Configure the authentication plug pipeline
+config :todos_api, TodosApiWeb.Authentication.Pipeline,
+  module: TodosApiWeb.Authentication.Guardian,
+  error_handler: TodosApiWeb.Authentication.ErrorHandler
 
 import_config "#{Mix.env()}.exs"

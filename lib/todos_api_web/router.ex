@@ -5,6 +5,11 @@ defmodule TodosApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authenticated do
+    plug TodosApiWeb.Authentication.Pipeline
+  end
+
+
   scope "/api", TodosApiWeb do
     pipe_through :api
     
@@ -12,6 +17,8 @@ defmodule TodosApiWeb.Router do
       post "/sign_up", UserController, :create
       post "/sign_in", AuthenticationController, :sign_in
     end
+
+    pipe_through :authenticated
 
     resources "/users", UserController, except: [:create, :new, :edit]
   end

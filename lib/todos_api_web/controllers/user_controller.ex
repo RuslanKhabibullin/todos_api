@@ -3,7 +3,10 @@ defmodule TodosApiWeb.UserController do
 
   alias TodosApi.Accounts
   alias TodosApi.Accounts.User
-  alias TodosApi.Guardian
+  alias TodosApiWeb.Authentication.Guardian
+  alias TodosApiWeb.Authorization.Permission
+  
+  import TodosApiWeb.Authorization.UserHandler, only: [can: 2]
 
   action_fallback TodosApiWeb.FallbackController
 
@@ -23,13 +26,17 @@ defmodule TodosApiWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
-    render(conn, "show.json", user: user)
+
+    with {:ok, conn} <- can(conn, %Permission{action: :show, entity: user}) do
+      render(conn, "show.json", user: user)
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
 
-    with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
+    with {:ok, conn} <- can(conn, %Permission{action: :update, entity: user}),
+         {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
       render(conn, "show.json", user: user)
     end
   end
@@ -37,7 +44,8 @@ defmodule TodosApiWeb.UserController do
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
 
-    with {:ok, %User{}} <- Accounts.delete_user(user) do
+    with {:ok, conn} <- can(conn, %Permission{action: :delete, entity: user}),
+         {:ok, %User{}} <- Accounts.delete_user(user) do
       send_resp(conn, :no_content, "")
     end
   end

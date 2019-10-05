@@ -1,8 +1,8 @@
-defmodule TodosApiWeb.AuthenticationController do
+defmodule TodosApiWeb.AuthenticationController do  
   use TodosApiWeb, :controller
 
   alias TodosApi.Accounts
-  alias TodosApi.Guardian
+  alias TodosApiWeb.Authentication.Guardian
 
   action_fallback TodosApiWeb.FallbackController
 
