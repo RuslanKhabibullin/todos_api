@@ -5,7 +5,9 @@
 Elixir backend for todos app. Currently implemented user stories:
 - User can sign up
 - User can sign in
+- User can sign in through Google
 - User can edit profile
+- User can get profile
 - User can destroy profile
 - User can get other users
 
