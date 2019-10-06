@@ -23,5 +23,6 @@ defmodule TodosApiWeb.Router do
     pipe_through :authenticated
 
     resources "/users", UserController, except: [:create, :new, :edit]
+    resources "/todos", TodoController, except: [:new, :edit]
   end
 end

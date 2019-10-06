@@ -3,12 +3,14 @@ defmodule TodosApi.Accounts.User do
   import Ecto.Changeset
 
   alias TodosApi.Accounts.Oauth
+  alias TodosApi.Todos.Todo
 
   schema "users" do
     field :email, :string
     field :password_hash, :string
     field :password, :string, virtual: true
     has_many :oauths, Oauth
+    has_many :todos, Todo
 
     timestamps()
   end
