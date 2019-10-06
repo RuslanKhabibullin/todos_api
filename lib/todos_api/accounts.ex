@@ -38,6 +38,23 @@ defmodule TodosApi.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+
+  @doc """
+  Gets a user by email
+
+  ### Examples
+
+        iex> get_user_by_email("test@email.com")
+        %User{}
+
+        iex> get_user_by_email("non_existing_email@email.com")
+        nil
+
+  """
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: String.downcase(email))
+  end
+
   @doc """
   Gets a single user by email and password
 
@@ -56,7 +73,7 @@ defmodule TodosApi.Accounts do
   def get_user_by_email_and_password(nil, _password), do: {:error, :invalid}
   def get_user_by_email_and_password(_email, nil), do: {:error, :invalid}
   def get_user_by_email_and_password(email, password) do
-    case Repo.get_by(User, email: String.downcase(email)) do
+    case get_user_by_email(email) do
       nil -> {:error, :unauthorised}
       user ->
         is_password_valid = Argon2.verify_pass(password, user.password_hash)
@@ -205,15 +222,17 @@ defmodule TodosApi.Accounts do
   ### Examples
 
         iex> get_user_by_provider_and_uid("provider", "uid")
-        %User{}
+        {:ok, %User{}}
 
   """
+  def get_user_by_provider_and_uid(nil, _uid), do: {:error, :invalid}
+  def get_user_by_provider_and_uid(_provider, nil), do: {:error, :invalid}
   def get_user_by_provider_and_uid(provider, uid) do
     case Repo.get_by(Oauth, provider: provider, uid: uid) do
-      nil -> nil
+      nil -> {:error, :not_found}
       oauth ->
         oauth = Repo.preload(oauth, :user) 
-        oauth.user
+        {:ok, oauth.user}
     end
   end
 

@@ -17,7 +17,7 @@ defmodule TodosApi.MixProject do
   def application do
     [
       mod: {TodosApi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_google]
     ]
   end
 
@@ -35,6 +35,7 @@ defmodule TodosApi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:ueberauth, "~> 0.6"},
+      {:ueberauth_google, "~> 0.8"},
       {:argon2_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false}

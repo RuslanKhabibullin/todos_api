@@ -126,12 +126,13 @@ defmodule TodosApi.AccountsTest do
 
     test "get_user_by_provider_and_uid/2 returns nil when oauth not exists" do
       oauth_fixture()
-      assert Accounts.get_user_by_provider_and_uid("linkedin", "uid") == nil
+      assert Accounts.get_user_by_provider_and_uid("linkedin", "uid") == {:error, :not_found}
     end
 
     test "get_user_by_provider_and_uid/2 returns oauth user" do
       oauth_fixture()
-      assert Accounts.get_user_by_provider_and_uid("google", "uid").email == "user@email.com"
+      {:ok, %{email: email}} = Accounts.get_user_by_provider_and_uid("google", "uid")
+      assert email == "user@email.com"
     end
 
     test "create_user_with_oauth/1 creates user with oauth" do

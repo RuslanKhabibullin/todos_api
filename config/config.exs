@@ -17,6 +17,16 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
+config :ueberauth, Ueberauth,
+  providers: [
+    google: {Ueberauth.Strategy.Google, [default_scope: "email profile"]}
+  ],
+  base_path: "/api/auth"
+
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: System.get_env("GOOGLE_CLIENT_ID"),
+  client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
+
 config :todos_api, TodosApiWeb.Authentication.Guardian,
   issuer: "TodosApi",
   secret_key: System.get_env("SECRET_KEY_BASE")

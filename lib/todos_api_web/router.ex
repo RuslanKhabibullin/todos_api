@@ -16,6 +16,8 @@ defmodule TodosApiWeb.Router do
     scope "/auth" do
       post "/sign_up", UserController, :create
       post "/sign_in", AuthenticationController, :sign_in
+      get "/:provider", AuthenticationController, :request
+      get "/:provider/callback", AuthenticationController, :callback
     end
 
     pipe_through :authenticated
