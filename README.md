@@ -10,6 +10,10 @@ Elixir backend for todos app. Currently implemented user stories:
 - User can get profile
 - User can destroy profile
 - User can get other users
+- User can create todo
+- User can get own todos
+- User can update own todos
+- User can delete own todos
 
 ## Installing
 To start your Phoenix server:
