@@ -24,7 +24,7 @@ Secured endpoints (authorization header with token required):
 - `GET /api/users/:id` - get user data by id
 - `PUT /api/users/:id` - update user
 - `DELETE /api/users/:id` - delete user
-- `GET /api/todos` - get current user todos
+- `GET /api/todos` - get current user todos. Also allowed filter params: `is_finished` - boolean
 - `GET /api/todos/:id` - get todo by id
 - `PUT /api/todos/:id` - update todo by id
 - `DELETE /api/todos/:id` - delete todo by id

@@ -23,17 +23,21 @@ defmodule TodosApi.Todos do
   end
 
   @doc """
-  Returns all user todos
+  Returns all user todos. Query can be filtered with second argument with filters
 
   ## Examples
 
       iex> list_user_todos(user)
       [%Todo{}, ...]
 
+      iex> list_user_todos(user, [is_finished: true])
+      [%Todo{}, ...]
+
   """
-  def list_user_todos(%User{} = user) do
+  def list_user_todos(%User{} = user, filters \\ []) do
     Todo
     |> where(user_id: ^user.id)
+    |> where(^filters)
     |> Repo.all
   end
 

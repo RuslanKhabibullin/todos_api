@@ -10,10 +10,12 @@ defmodule TodosApiWeb.TodoController do
 
   action_fallback TodosApiWeb.FallbackController
 
-  def index(conn, _params) do
+  def index(conn, params) do
+    filters = get_filters_from_params(params)
+
     todos = conn
     |> current_user
-    |> Todos.list_user_todos
+    |> Todos.list_user_todos(filters)
 
     render(conn, "index.json", todos: todos)
   end
@@ -50,5 +52,11 @@ defmodule TodosApiWeb.TodoController do
          {:ok, %Todo{}} <- Todos.delete_todo(todo) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  defp get_filters_from_params(params) do
+    Ecto.Changeset.cast(%Todo{}, params, [:is_finished])
+    |> Map.fetch!(:changes)
+    |> Map.to_list
   end
 end
