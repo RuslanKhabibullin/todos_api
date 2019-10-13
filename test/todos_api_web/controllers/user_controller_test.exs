@@ -28,15 +28,6 @@ defmodule TodosApiWeb.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "index" do
-    setup [:create_user, :authenticate_user]
-
-    test "lists all users", %{conn: conn, user: user} do
-      conn = get(conn, Routes.user_path(conn, :index))
-      assert json_response(conn, 200)["data"] == [%{"email" => "user@email.com", "id" => user.id}]
-    end
-  end
-
   describe "get user without token" do
     setup [:create_user]
 

@@ -23,6 +23,21 @@ defmodule TodosApi.Todos do
   end
 
   @doc """
+  Returns all user todos
+
+  ## Examples
+
+      iex> list_user_todos(user)
+      [%Todo{}, ...]
+
+  """
+  def list_user_todos(%User{} = user) do
+    Todo
+    |> where(user_id: ^user.id)
+    |> Repo.all
+  end
+
+  @doc """
   Gets a single todo.
 
   Raises `Ecto.NoResultsError` if the Todo does not exist.
@@ -43,10 +58,10 @@ defmodule TodosApi.Todos do
 
   ## Examples
 
-      iex> create_todo(%{field: value})
+      iex> create_todo(user, %{field: value})
       {:ok, %Todo{}}
 
-      iex> create_todo(%{field: bad_value})
+      iex> create_todo(user, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """

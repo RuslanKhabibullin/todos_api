@@ -28,6 +28,14 @@ defmodule TodosApi.TodosTest do
       assert Todos.list_todos() == [todo]
     end
 
+    test "list_user_todos/1 returns user todos" do
+      _another_user_todo = todo_fixture()
+      user = user_fixture(%{email: "some_user@email.com", password: "password"})
+      {:ok, user_todo} = Todos.create_todo(user, @valid_attrs)
+
+      assert Todos.list_user_todos(user) == [user_todo]
+    end
+
     test "get_todo!/1 returns the todo with given id" do
       todo = todo_fixture()
       assert Todos.get_todo!(todo.id) == todo
