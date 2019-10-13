@@ -38,6 +38,7 @@ defmodule TodosApi.MixProject do
       {:ueberauth_google, "~> 0.8"},
       {:argon2_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
+      {:cors_plug, "~> 2.0"},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end

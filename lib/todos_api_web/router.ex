@@ -2,6 +2,7 @@ defmodule TodosApiWeb.Router do
   use TodosApiWeb, :router
 
   pipeline :api do
+    plug CORSPlug, origin: System.get_env("FRONTEND_URL") || "*"
     plug :accepts, ["json"]
   end
 
