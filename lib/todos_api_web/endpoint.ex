@@ -2,7 +2,7 @@ defmodule TodosApiWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :todos_api
 
   socket "/socket", TodosApiWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
