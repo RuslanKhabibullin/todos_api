@@ -40,5 +40,6 @@ defmodule TodosApiWeb.Endpoint do
     key: "_todos_api_key",
     signing_salt: "Wc/KwKr9"
 
+  plug CORSPlug, origin: System.get_env("FRONTEND_URL") || "*"
   plug TodosApiWeb.Router
 end
