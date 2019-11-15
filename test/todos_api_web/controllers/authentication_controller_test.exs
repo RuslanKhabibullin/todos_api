@@ -36,6 +36,7 @@ defmodule TodosApiWeb.AuthenticationControllerTest do
       params = %{"user" => @user_attrs}
       conn = post(conn, Routes.authentication_path(conn, :sign_in, params))
       response = json_response(conn, 200)["data"]
+      assert %{"id" => id} = response["user"]
       assert is_bitstring(response["token"]) == true
     end
   end

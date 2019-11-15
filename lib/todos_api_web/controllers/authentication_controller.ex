@@ -44,7 +44,7 @@ defmodule TodosApiWeb.AuthenticationController do
     case user do
       {:ok, user} ->
         {:ok, jwt, _claims} = Guardian.encode_and_sign(user)
-        json(conn, %{data: %{token: jwt}})
+        json(conn, %{data: %{token: jwt, user: %{id: user.id, email: user.email}}})
       {:error, _reason} ->
         conn
         |> put_status(:unauthorized)
