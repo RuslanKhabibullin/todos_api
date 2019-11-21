@@ -8,6 +8,7 @@ defmodule TodosApi.TodosTest do
     alias TodosApi.Todos.Todo
 
     @valid_attrs %{description: "some description", is_finished: true, title: "some title"}
+    @another_valid_attrs %{title: "some title"}
     @update_attrs %{description: "some updated description", is_finished: false, title: "some updated title"}
     @invalid_attrs %{description: nil, is_finished: nil, title: nil}
 
@@ -53,6 +54,12 @@ defmodule TodosApi.TodosTest do
       assert {:ok, %Todo{} = todo} = Todos.create_todo(user_fixture(), @valid_attrs)
       assert todo.description == "some description"
       assert todo.is_finished == true
+      assert todo.title == "some title"
+    end
+
+    test "create_todo/2 with valid data(without description and flag)" do
+      assert {:ok, %Todo{} = todo} = Todos.create_todo(user_fixture(), @another_valid_attrs)
+      assert todo.is_finished == false
       assert todo.title == "some title"
     end
 

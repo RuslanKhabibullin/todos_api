@@ -17,6 +17,6 @@ defmodule TodosApi.Todos.Todo do
   def changeset(todo, attrs) do
     todo
     |> cast(attrs, [:title, :description, :is_finished])
-    |> validate_required([:title, :description, :is_finished])
+    |> validate_required([:title])
   end
 end
